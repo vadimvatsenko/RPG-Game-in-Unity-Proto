@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpForce = 5;
     private float _xInput; // создали публичную переменную, в нее будет записыватся положение Horizontal
     // private bool _isMoving; // переменная которая будет хранить в себе, двигается ли наш персонаж // удаляем эту переменную, так как она нам нужна будет только в методе AnimatorController()
+    private int _facingDir = 1; // по умолчанию маш персонаж смотрит в право, потому значение 1, если бы в противоположную смотрел, то было бы -1
+    private bool _isFacingRight = true; // по умолчанию персонаж смотрит в право
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>(); // теперь мы получили Rigidbody2D компонента, а сам Rigidbody2D остался приватным
@@ -18,8 +20,8 @@ public class Player : MonoBehaviour
         Movement();
         CheckInput();
         AnimatorController();
+        FlipController();
     }
-
     private void CheckInput()
     {
         _xInput = Input.GetAxisRaw("Horizontal"); // записываем в переменную xInput нажатие клавиш A и D
@@ -39,10 +41,25 @@ public class Player : MonoBehaviour
     }
     private void AnimatorController()
     {
-
         bool _isMoving = Math.Abs(_rb.velocity.x) > 0f; // _rb.velocity.x - может быть как положительным, так и отрицательным, потому мы к нему применяем Math.Abs - он конвертирует любое число в положительное
         //bool _isMoving = _rb.velocity.x != 0f; // альтернативная запись верхней строчки
         _animator.SetBool("isMoving", _isMoving); // _animator обращается к Unity аниматору в котором есть переменная isMoving в которую присваиваем значение _isMoving, потому у нас включается анимация
-
+    }
+    private void Flip()
+    {
+        _facingDir *= -1; // эта формула меняет переменную _facingDir на противоположную
+        _isFacingRight = !_isFacingRight; // меняет переменную _isFacingRight на противоположную, то есть равен не себе
+        transform.Rotate(0, 180, 0); // поворачивает игрока по оси y
+    }
+    private void FlipController()
+    {
+        if (_rb.velocity.x > 0 && !_isFacingRight)
+        {
+            Flip();
+        }
+        else if (_rb.velocity.x < 0 && _isFacingRight)
+        {
+            Flip();
+        }
     }
 }
