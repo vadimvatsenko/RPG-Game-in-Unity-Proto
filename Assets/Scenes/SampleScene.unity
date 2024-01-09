@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 203738562}
   - component: {fileID: 203738561}
   - component: {fileID: 203738563}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +289,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.43907973, g: 0.52147114, b: 0.6509434, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -396,8 +396,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.13455233, y: -0.06727636}
-  m_Size: {x: 0.76910466, y: 2.076419}
+  m_Offset: {x: 0, y: -0.27972817}
+  m_Size: {x: 0.9518772, y: 2.1054196}
   m_Direction: 0
 --- !u!50 &1736786214
 Rigidbody2D:
@@ -435,7 +435,7 @@ Transform:
   m_GameObject: {fileID: 1736786212}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.27, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -455,7 +455,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpForce: 5
+  jumpForce: 8
+  groundCheckDistance: 1.38
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1912237137
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1912237138}
   - component: {fileID: 1912237139}
+  - component: {fileID: 1912237140}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -540,6 +545,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1912237140
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912237137}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8c2feac55abee89469a3058727961b1d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
