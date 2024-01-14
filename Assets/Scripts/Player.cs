@@ -1,9 +1,9 @@
 using System;
+using UnityEditor.Callbacks;
 using UnityEngine;
-public class Player : MonoBehaviour
+public class Player : Entity
 {
-    private Rigidbody2D _rb; // можно в редакторе перетянуть Rigidbody2D или в методе Start получить его
-    private Animator _animator; // объявляем переменную _animator (контроллер анимации)
+    [Header("Move info")]
     [SerializeField] private float moveSpeed = 5; // ускорение нашего игрока, так как xInput может быть -1 или 1, то это значение очень маленькое, потому нужно его умножать на ускорение
     [SerializeField] private float jumpForce = 5;
 
@@ -15,40 +15,58 @@ public class Player : MonoBehaviour
     private float dashCooldownTimer; // таймер перерыва между рывками
 
     private float _xInput; // создали публичную переменную, в нее будет записыватся положение Horizontal
-    // private bool _isMoving; // переменная которая будет хранить в себе, двигается ли наш персонаж // удаляем эту переменную, так как она нам нужна будет только в методе AnimatorController()
-    private int _facingDir = 1; // по умолчанию маш персонаж смотрит в право, потому значение 1, если бы в противоположную смотрел, то было бы -1
-    private bool _isFacingRight = true; // по умолчанию персонаж смотрит в право
-    [Header("Collision info")] // группировка в самом редакторе на отдельные составляющие !!! Важно, после Header не должно идти приватных переменных
-    [SerializeField] private float groundCheckDistance; // переменная, которая будет хранить в себе расстояние до земли
-    [SerializeField] private LayerMask whatIsGround; // переменная в которой будет хранится слой который мы создали ground в начале этого раздела
-    private bool _isGrounded; // переменная которая будет хранить в себе - находимся ли мы на земле или нет
-    void Start()
+                           // private bool _isMoving; // переменная которая будет хранить в себе, двигается ли наш персонаж // удаляем эту переменную, так как она нам нужна будет только в методе AnimatorController()
+
+
+
+
+    [Header("Attack info")]
+    private float comboTimeWindow; // время которое будет уменьшатся таймером, если будет ниже 0ля, то начинай комбо с 1й атаки(заново)
+    private float comboTime = 1f; // время, на атаку комбо, если это время вышло, то комбо начинается с первого, а не на том котором остановилась
+    private bool isAttacking; // атакует ли на игрок
+    private int comboCounter; // счётчик комбо
+
+    protected override void Start()
     {
-        _rb = GetComponent<Rigidbody2D>(); // теперь мы получили Rigidbody2D компонента, а сам Rigidbody2D остался приватным
-        _animator = GetComponentInChildren<Animator>(); // получаем доступ к Animator в его ребёнке, В Player есть объект Animator. в Animator есть 
+        base.Start();
     }
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         Movement();
         CheckInput();
-        CollisionChecks();
+
 
         dashTime -= Time.deltaTime; // время рывка будет уменьшатся каждый кадр
         dashCooldownTimer -= Time.deltaTime; // время перерыва рывка будет уменьшатся каждый кадр, изначально ничему не равен и сразу уходит в минус
+
+        comboTimeWindow -= Time.deltaTime; // уменьшает время комбо, нужно успеть в это время, иначе комбо прекратится и нужно начинать заново
 
 
         AnimatorController();
         FlipController();
     }
-    private void CollisionChecks() // вынесли проверку столкновения с землёй в отдельный метод
+
+    public void AttackOver() // метод, который отвечает за прекращение анимации атаки, мы будем добавлять этот метод на последний кадр анимации атаки
     {
-        _isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
-        // Physics2D.Raycast - выпускает луч от transform.position(позиции игрока) до Vector2.down (вниз) на расстояние groundCheckDistance, взаимодействует только с слоями, которые будут записаны в LayerMask whatIsGround.
-        // возвращает true or false;
+        isAttacking = false;
+
+        comboCounter++; // увеличиваем счётчик комбо на 1
+
+        if (comboCounter > 2)
+        { // сбрасываем счётчик комбо, если он выше 2
+            comboCounter = 0;
+        }
+
     }
+
     private void CheckInput()
     {
         _xInput = Input.GetAxisRaw("Horizontal"); // записываем в переменную xInput нажатие клавиш A и D
+        if (Input.GetKeyDown(KeyCode.Mouse0)) // если мы нажали кнопку мыши, то isAttacking = true
+        {
+            StartAttaceEvent();
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
@@ -59,9 +77,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void StartAttaceEvent() // вынесли в отдельный метод
+    {
+        if (!_isGrounded) // если игрок не на земле, то не выполняй атаку
+        {
+            return;
+        }
+        if (comboTimeWindow < 0) // если время на комбоатаку вышло, то начинай с первой атаки
+        {
+            comboCounter = 0;
+        }
+        isAttacking = true;
+        comboTimeWindow = comboTime; // во время атаки значение времени на комбоатаку записывается в comboTimeWindow, а в Update запускается обратный счётчик
+    }
+
     private void DashAbility()
     {
-        if (dashCooldownTimer < 0) //dashCooldownTimer меньше нуля, а он меньше, так как работает на нем таймер в обратную сторону
+        if (dashCooldownTimer < 0 && !isAttacking) //dashCooldownTimer меньше нуля и не атакует, а он меньше, так как работает на нем таймер в обратную сторону
         {
             dashCooldownTimer = dashCooldown; // записалась 10 в таймер и он пошёл убавлятся выше в Update dashCooldownTimer -= Time.deltaTime
             dashTime = dashDuration; // когда мы наживаем LShift время рывка становится 2ка(из редактора) и запускается таймер, тот, что сверху
@@ -70,9 +102,13 @@ public class Player : MonoBehaviour
     }
     private void Movement()
     {
-        if (dashTime > 0)
+        if (isAttacking) // если наш игрок атакует, то он стоит на месте
+        {
+            _rb.velocity = new Vector2(0, 0);
+        }
+        else if (dashTime > 0)
         { // если время рывка больше 0, то выполни рывок
-            _rb.velocity = new Vector2(_xInput * dashSpeed, 0); //_xInput - направление(1 или -1) * на dashSpeed - скорость рывка, а по y - 0, что бы не терял высоту при рывке в воздухе
+            _rb.velocity = new Vector2(_facingDir * dashSpeed, 0); //_xInput - направление(1 или -1) * на dashSpeed - скорость рывка, а по y - 0, что бы не терял высоту при рывке в воздухе
         }
         else
         {
@@ -92,13 +128,10 @@ public class Player : MonoBehaviour
         _animator.SetBool("isMoving", _isMoving); // _animator обращается к Unity аниматору в котором есть переменная isMoving в которую присваиваем значение _isMoving, потому у нас включается анимация
         _animator.SetBool("isGrounded", _isGrounded); // _animator обращается к Unity аниматору в котором есть переменная isGrounded в которую присваиваем значение _isGrounded, потому у нас включается анимация
         _animator.SetBool("isDashing", dashTime > 0); // рапускаем рывок, если dashTime > 0
+        _animator.SetBool("isAttacking", isAttacking); // анимация атаки
+        _animator.SetInteger("comboCounter", comboCounter); // передает в анимацию счётчик комбо
     }
-    private void Flip()
-    {
-        _facingDir *= -1; // эта формула меняет переменную _facingDir на противоположную
-        _isFacingRight = !_isFacingRight; // меняет переменную _isFacingRight на противоположную, то есть равен не себе
-        transform.Rotate(0, 180, 0); // поворачивает игрока по оси y
-    }
+
     private void FlipController()
     {
         if (_rb.velocity.x > 0 && !_isFacingRight)
@@ -110,8 +143,5 @@ public class Player : MonoBehaviour
             Flip();
         }
     }
-    private void OnDrawGizmos() // метод в Unity который рисует вспомогательные линии на сцене
-    {
-        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - groundCheckDistance)); // Gizmos.DrawLine - нарисовать линию (от и до). От позиции игрока до позиции игрока по x и y минус groundCheckDistance
-    }
+
 }
