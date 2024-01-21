@@ -13,11 +13,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallCheckDistance;
     [SerializeField] private LayerMask whatIsGround;
 
+    public int facingDir { get; private set; } = 1; // направление игрока по умолчанию 1, { get; private set; } - означает, что мы можем получать данные из другого скрипта, но не изменять
+    private bool facingRight = true;
+
 
     // #region Components - группировка, можно скрыить контент
     #region Components 
-    public Rigidbody2D rb
-    { get; private set; }
+    public Rigidbody2D rb { get; private set; }
     public Animator anim { get; private set; } // это сделано для того, что бы мы могли вызвать anim из другого скрипта
 
     #endregion
@@ -58,6 +60,7 @@ public class Player : MonoBehaviour
     public void SetVelocity(float _xVelocity, float _yVelocity)
     {
         rb.velocity = new Vector2(_xVelocity, _yVelocity);
+        FlipController(_xVelocity); // передаем положение игрока по х
     }
 
     public bool whatIsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
@@ -70,6 +73,28 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
 
     }
+
+    public void Flip() // метод переворота игрока
+    {
+        facingDir = facingDir * -1;
+        facingRight = !facingRight;
+        transform.Rotate(0, 180, 0);
+
+    }
+
+    public void FlipController(float _x) // вызывает метод Flip()
+    {
+        if (_x > 0 && !facingRight) // если движение по x больше 0 и герой не повернут в лево. перевернись 
+        {
+            Flip();
+        }
+        else if (_x < 0 && facingRight)
+        {
+            Flip();
+        }
+    }
+
+
 
 
 }
