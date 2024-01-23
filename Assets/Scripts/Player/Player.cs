@@ -6,6 +6,13 @@ public class Player : MonoBehaviour
     public float moveSpeed = 12f;
     public float jumpForce;
 
+    [Header("Dash info")]
+    [SerializeField] private float dashCooldown; // время остывания даша
+    private float dashUsageTimer; // 
+    public float dashSpeed; // скорость даша
+    public float dashDuration; // продолжительность даша
+    public float dashDir { get; private set; } // переменная которая будет хранить в себе направление даша
+
     [Header("Collision info")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckDistance;
@@ -30,6 +37,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
+    public PlayerDashState dashState { get; private set; }
     #endregion
 
     private void Awake()
@@ -43,6 +51,8 @@ public class Player : MonoBehaviour
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
 
         airState = new PlayerAirState(this, stateMachine, "Jump");
+
+        dashState = new PlayerDashState(this, stateMachine, "Dash");
     }
 
     private void Start()
@@ -55,6 +65,26 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.Update();
+
+        CheckForDashInput(); // вызывем метод запуск даша
+    }
+
+    private void CheckForDashInput() // метод который будет отвечать за запуск даша
+    {
+        dashUsageTimer -= Time.deltaTime; // dashUsegeTimer будет постоянно уменьшатся
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTimer < 0) // если нажат шифТ И dashUsegeTimer меньше нуля
+        {
+            dashUsageTimer = dashCooldown; // после нажатия шифта даш нельзя будет сделать, он будет остывать
+
+            dashDir = Input.GetAxisRaw("Horizontal"); // получаем ось куда необходимо сделать даш, в зависимомти от положении игрока
+
+            if (dashDir == 0)
+            {
+                dashDir = facingDir; // если мы стоим на месте и подпрыгиваем, то даш в воздухе будет направлен туда, куда смотрит персонаж
+            }
+            stateMachine.ChangeState(dashState);
+        }
     }
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
