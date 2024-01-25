@@ -19,6 +19,10 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Update();
 
+        if (xInput == player.facingDir && player.WhatIsWallDecected()) // если лицо смотрит в право равно кнопке движиния в право и обнаружена стена, то выйди и не выполняй код ниже
+        {
+            return; // во общем игрок не будет бежать, если прикоснулся стены
+        }
 
 
         if (xInput != 0) // если координаты по xInput в PlayerState не равно 0, поменяй состояние на ходьбу

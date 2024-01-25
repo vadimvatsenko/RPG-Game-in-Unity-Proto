@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
     public PlayerDashState dashState { get; private set; }
+    public PlayerWallSlideState wallSlideState { get; private set; }
     #endregion
 
     private void Awake()
@@ -53,6 +54,8 @@ public class Player : MonoBehaviour
         airState = new PlayerAirState(this, stateMachine, "Jump");
 
         dashState = new PlayerDashState(this, stateMachine, "Dash");
+
+        wallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
     }
 
     private void Start()
@@ -67,6 +70,8 @@ public class Player : MonoBehaviour
         stateMachine.currentState.Update();
 
         CheckForDashInput(); // вызывем метод запуск даша
+
+        Debug.Log(WhatIsWallDecected());
     }
 
     private void CheckForDashInput() // метод который будет отвечать за запуск даша
@@ -95,7 +100,8 @@ public class Player : MonoBehaviour
 
     public bool whatIsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
     // будевы метод, который возвращает, столкнулись ли мы з землёй. от groundCheck.position к низу, на дистанцию groundCheckDistance, маска whatIsGround
-
+    public bool WhatIsWallDecected() => Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
+    // будевы метод, который возвращает, столкнулись ли мы cо стеной. от wallCheck.position к право или лево(в зависимости, что facingDir(1 или -1)), на дистанцию wallCheckDistance, маска whatIsGround
     private void OnDrawGizmos() // рисуем линию к земле и стене
     {
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
