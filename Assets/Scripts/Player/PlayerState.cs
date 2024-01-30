@@ -12,7 +12,6 @@ public class PlayerState
     private string animBoolName; // приватная переменная с названием анимации
     protected float xInput;
     protected float yInput;
-
     protected float stateTimer; // таймер для Dash
     public PlayerState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) // Конструктор класса PlayerState принимает и создает экземпляр
 
@@ -38,6 +37,8 @@ public class PlayerState
         stateTimer -= Time.deltaTime; // будем отнимать таймер
         yInput = Input.GetAxisRaw("Vertical");
         xInput = Input.GetAxis("Horizontal");
+
+        Debug.Log(xInput);
 
         player.anim.SetFloat("yVelocity", rb.velocity.y); // rb.velocity.y - текущее положение игрока по y
     }

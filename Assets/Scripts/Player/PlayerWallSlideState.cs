@@ -11,6 +11,7 @@ public class PlayerWallSlideState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
     }
 
     public override void Exit()
@@ -22,7 +23,19 @@ public class PlayerWallSlideState : PlayerState
     {
         base.Update();
 
-        if ((xInput != 0 && player.facingDir != xInput) || player.whatIsGroundDetected()) // если ввод управления не равен 0 и куда смотрит персонаж не равно вводу, перейди в состояние покоя или коснулся земли
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            stateMachine.ChangeState(player.wallJumpState);
+            return; // нужно выйти с Update инааче не сработает прыжок, код, что ниже будет срабатывать
+        }
+
+        if (xInput != 0 && player.facingDir != xInput) // если ввод управления не равен 0 и куда смотрит персонаж не равно вводу, перейди в состояние покоя или коснулся земли
+        {
+            stateMachine.ChangeState(player.idleState);
+
+        }
+
+        if (player.whatIsGroundDetected())
         {
             stateMachine.ChangeState(player.idleState);
         }

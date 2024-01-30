@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public int facingDir { get; private set; } = 1; // направление игрока по умолчанию 1, { get; private set; } - означает, что мы можем получать данные из другого скрипта, но не изменять
     private bool facingRight = true;
 
+    internal int xInput;
+
 
     // #region Components - группировка, можно скрыить контент
     #region Components 
@@ -39,6 +41,7 @@ public class Player : MonoBehaviour
     public PlayerAirState airState { get; private set; }
     public PlayerDashState dashState { get; private set; }
     public PlayerWallSlideState wallSlideState { get; private set; }
+    public PlayerWallJumpState wallJumpState { get; private set; }
     #endregion
 
     private void Awake()
@@ -56,6 +59,8 @@ public class Player : MonoBehaviour
         dashState = new PlayerDashState(this, stateMachine, "Dash");
 
         wallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
+
+        wallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
     }
 
     private void Start()
@@ -67,15 +72,20 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        stateMachine.currentState.Update();
-
-        CheckForDashInput(); // вызывем метод запуск даша
-
         Debug.Log(WhatIsWallDecected());
+
+
+        stateMachine.currentState.Update();
+        CheckForDashInput(); // вызывем метод запуск даша
     }
 
     private void CheckForDashInput() // метод который будет отвечать за запуск даша
     {
+        if (WhatIsWallDecected())
+        {
+            return; // если мы коснулись земли выйди из этого метода
+        }
+
         dashUsageTimer -= Time.deltaTime; // dashUsegeTimer будет постоянно уменьшатся
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTimer < 0) // если нажат шифТ И dashUsegeTimer меньше нуля

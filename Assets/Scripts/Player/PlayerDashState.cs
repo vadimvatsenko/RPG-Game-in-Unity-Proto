@@ -26,6 +26,11 @@ public class PlayerDashState : PlayerState
     {
         base.Update();
 
+        if (!player.whatIsGroundDetected() && player.WhatIsWallDecected()) // если не обнаружена земля и обнаружена стена, перейди в wallSlideState
+        {
+            stateMachine.ChangeState(player.wallSlideState);
+        }
+
         player.SetVelocity(player.dashSpeed * player.dashDir, 0); // передаем в метод скорость даша * (на 1 или -1), по y поставили 0, чтобы игрок не стримился внуз во время даша
 
         if (stateTimer < 0) // когда таймер истёк перейди в обычное состояние

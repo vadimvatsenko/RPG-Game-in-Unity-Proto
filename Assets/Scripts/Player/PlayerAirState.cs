@@ -1,5 +1,7 @@
 
+using UnityEngine;
 // 8й
+
 public class PlayerAirState : PlayerState
 {
     public PlayerAirState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) : base(_player, _stateMachine, _animBoolName)
@@ -19,10 +21,11 @@ public class PlayerAirState : PlayerState
     {
         base.Update();
 
-        if (player.WhatIsWallDecected())
+        if (player.WhatIsWallDecected()) // добавил дополнительную проверку, если нажатая кнопка совпадает с вводом, то прилипни к стене
         {
             stateMachine.ChangeState(player.wallSlideState);
         }
+
 
         if (player.whatIsGroundDetected()) // если игрок на земле
         {

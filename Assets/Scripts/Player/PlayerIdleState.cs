@@ -1,3 +1,4 @@
+using UnityEngine;
 // 3й скрипт
 public class PlayerIdleState : PlayerGroundedState
 {
@@ -8,6 +9,8 @@ public class PlayerIdleState : PlayerGroundedState
     public override void Enter() // унаследован метод из PlayerState
     {
         base.Enter();
+
+        rb.velocity = new Vector2(0, 0); // устанавливаем значения по 0 0, это предотвратит баг с постояной ходьбой, после прыжка со стены
     }
 
     public override void Exit() // унаследован метод из PlayerState 
