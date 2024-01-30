@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     internal int xInput;
 
 
-    // #region Components - группировка, можно скрыить контент
+    // #region Components - группировка, можно скрыть контент
     #region Components 
     public Rigidbody2D rb { get; private set; }
     public Animator anim { get; private set; } // это сделано для того, что бы мы могли вызвать anim из другого скрипта
@@ -72,11 +72,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(WhatIsWallDecected());
-
-
         stateMachine.currentState.Update();
-        CheckForDashInput(); // вызывем метод запуск даша
+        CheckForDashInput(); // вызываем метод запуск даша
     }
 
     private void CheckForDashInput() // метод который будет отвечать за запуск даша
@@ -88,11 +85,11 @@ public class Player : MonoBehaviour
 
         dashUsageTimer -= Time.deltaTime; // dashUsegeTimer будет постоянно уменьшатся
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTimer < 0) // если нажат шифТ И dashUsegeTimer меньше нуля
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTimer < 0) // если нажат shift И dashUsegeTimer меньше нуля
         {
-            dashUsageTimer = dashCooldown; // после нажатия шифта даш нельзя будет сделать, он будет остывать
+            dashUsageTimer = dashCooldown; // после нажатия shift даш нельзя будет сделать, он будет остывать
 
-            dashDir = Input.GetAxisRaw("Horizontal"); // получаем ось куда необходимо сделать даш, в зависимомти от положении игрока
+            dashDir = Input.GetAxisRaw("Horizontal"); // получаем ось куда необходимо сделать даш, в зависимости от положении игрока
 
             if (dashDir == 0)
             {
@@ -109,9 +106,9 @@ public class Player : MonoBehaviour
     }
 
     public bool whatIsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
-    // будевы метод, который возвращает, столкнулись ли мы з землёй. от groundCheck.position к низу, на дистанцию groundCheckDistance, маска whatIsGround
+    // булевой метод, который возвращает, столкнулись ли мы з землёй. от groundCheck.position к низу, на дистанцию groundCheckDistance, маска whatIsGround
     public bool WhatIsWallDecected() => Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
-    // будевы метод, который возвращает, столкнулись ли мы cо стеной. от wallCheck.position к право или лево(в зависимости, что facingDir(1 или -1)), на дистанцию wallCheckDistance, маска whatIsGround
+    // булевой метод, который возвращает, столкнулись ли мы cо стеной. от wallCheck.position к право или лево(в зависимости, что facingDir(1 или -1)), на дистанцию wallCheckDistance, маска whatIsGround
     private void OnDrawGizmos() // рисуем линию к земле и стене
     {
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));

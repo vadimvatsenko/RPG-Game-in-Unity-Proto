@@ -26,7 +26,7 @@ public class PlayerMoveState : PlayerGroundedState
 
         if (player.WhatIsWallDecected())
         {
-            stateMachine.ChangeState(player.idleState); // при движенеии персонажа, когда он врезался в стену прекрати анимацию бега
+            stateMachine.ChangeState(player.idleState); // при движением персонажа, когда он врезался в стену прекрати анимацию бега
 
         }
 

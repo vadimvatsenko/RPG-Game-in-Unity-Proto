@@ -10,7 +10,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Enter();
 
-        rb.velocity = new Vector2(0, 0); // устанавливаем значения по 0 0, это предотвратит баг с постояной ходьбой, после прыжка со стены
+        rb.velocity = new Vector2(0, 0); // устанавливаем значения по 0 0, это предотвратит баг с постоянной ходьбой, после прыжка со стены
     }
 
     public override void Exit() // унаследован метод из PlayerState 
@@ -22,7 +22,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Update();
 
-        if (xInput == player.facingDir && player.WhatIsWallDecected()) // если лицо смотрит в право равно кнопке движиния в право и обнаружена стена, то выйди и не выполняй код ниже
+        if (xInput == player.facingDir && player.WhatIsWallDecected()) // если лицо смотрит в право равно кнопке движения в право и обнаружена стена, то выйди и не выполняй код ниже
         {
             return; // во общем игрок не будет бежать, если прикоснулся стены
         }

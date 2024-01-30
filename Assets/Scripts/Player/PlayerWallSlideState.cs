@@ -26,7 +26,7 @@ public class PlayerWallSlideState : PlayerState
         if (Input.GetKeyDown(KeyCode.Space))
         {
             stateMachine.ChangeState(player.wallJumpState);
-            return; // нужно выйти с Update инааче не сработает прыжок, код, что ниже будет срабатывать
+            return; // нужно выйти с Update иначе не сработает прыжок, код, что ниже будет срабатывать
         }
 
         if (xInput != 0 && player.facingDir != xInput) // если ввод управления не равен 0 и куда смотрит персонаж не равно вводу, перейди в состояние покоя или коснулся земли
@@ -46,7 +46,7 @@ public class PlayerWallSlideState : PlayerState
         }
         else
         {
-            rb.velocity = new Vector2(0, rb.velocity.y * 0.9f); // при скльжении скорость будет 90% от скорости
+            rb.velocity = new Vector2(0, rb.velocity.y * 0.9f); // при скольжении скорость будет 90% от скорости
         }
 
     }

@@ -5,7 +5,7 @@ public class PlayerState
 {
     protected PlayerStateMachine stateMachine; // ссылка на скрипт PlayerStateMachine со своими методами
 
-    protected Player player; // сслыка на скрипт Player со своими методами
+    protected Player player; // ссылка на скрипт Player со своими методами
 
     protected Rigidbody2D rb; // создаем защищённое поле Rigidbody2D
 

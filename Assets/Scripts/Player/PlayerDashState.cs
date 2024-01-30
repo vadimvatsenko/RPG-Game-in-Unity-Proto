@@ -31,7 +31,7 @@ public class PlayerDashState : PlayerState
             stateMachine.ChangeState(player.wallSlideState);
         }
 
-        player.SetVelocity(player.dashSpeed * player.dashDir, 0); // передаем в метод скорость даша * (на 1 или -1), по y поставили 0, чтобы игрок не стримился внуз во время даша
+        player.SetVelocity(player.dashSpeed * player.dashDir, 0); // передаем в метод скорость даша * (на 1 или -1), по y поставили 0, чтобы игрок не стремился вниз во время даша
 
         if (stateTimer < 0) // когда таймер истёк перейди в обычное состояние
         {

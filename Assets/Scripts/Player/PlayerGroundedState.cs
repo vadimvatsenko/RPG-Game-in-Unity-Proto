@@ -1,7 +1,7 @@
 // 6й
 using UnityEngine;
 
-public class PlayerGroundedState : PlayerState // новое состояние, будет наследоватся от PlayerState, а PlayerIdleState и PlayerMoveState будут теперь наследоватся от этого скрипта
+public class PlayerGroundedState : PlayerState // новое состояние, будет наследоваться от PlayerState, а PlayerIdleState и PlayerMoveState будут теперь наследоваться от этого скрипта
 {
     public PlayerGroundedState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) : base(_player, _stateMachine, _animBoolName)
     {

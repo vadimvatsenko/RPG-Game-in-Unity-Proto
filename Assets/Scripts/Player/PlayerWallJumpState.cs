@@ -36,7 +36,7 @@ public class PlayerWallJumpState : PlayerState
 
         if (player.whatIsGroundDetected())
         {
-            stateMachine.ChangeState(player.idleState); // когда преземлились на землю после прыжка перейди в состояние idleState
+            stateMachine.ChangeState(player.idleState); // когда приземлилась на землю после прыжка, перейди в состояние idleState
         }
     }
 }

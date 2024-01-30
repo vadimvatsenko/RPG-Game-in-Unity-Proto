@@ -34,7 +34,7 @@ public class PlayerAirState : PlayerState
 
         if (xInput != 0)
         {
-            player.SetVelocity(player.moveSpeed * 0.8f * xInput, rb.velocity.y); // это для того, что бы мы могли двигатся в воздухе, по x мы замедляем скорось до 80 процентов и летим в направлении xInput, по y своё место положения
+            player.SetVelocity(player.moveSpeed * 0.8f * xInput, rb.velocity.y); // это для того, что бы мы могли двигается в воздухе, по x мы замедляем скорость до 80 процентов и летим в направлении xInput, по y своё место положения
         }
 
     }
