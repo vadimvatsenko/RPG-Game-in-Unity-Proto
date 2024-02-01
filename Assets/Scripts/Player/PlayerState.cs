@@ -13,6 +13,8 @@ public class PlayerState
     protected float xInput;
     protected float yInput;
     protected float stateTimer; // таймер для Dash
+
+    protected bool triggerCalled; // триггер для выполнения комбо атак
     public PlayerState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) // Конструктор класса PlayerState принимает и создает экземпляр
 
     {
@@ -24,6 +26,7 @@ public class PlayerState
     public virtual void Enter() // Виртуальный метод для входа в состояние
 
     {
+        triggerCalled = false;
         player.anim.SetBool(animBoolName, true); // когда мы входим, то включаем анимацию
         rb = player.rb;
         // для того что бы сократили код в PlayerMoveState, там есть эта строка - player.SetVelocity(xInput * player.moveSpeed, rb.velocity.y); - ранее rb.velocity.y был player.rb.velocity.y
@@ -38,8 +41,6 @@ public class PlayerState
         yInput = Input.GetAxisRaw("Vertical");
         xInput = Input.GetAxis("Horizontal");
 
-        Debug.Log(xInput);
-
         player.anim.SetFloat("yVelocity", rb.velocity.y); // rb.velocity.y - текущее положение игрока по y
     }
 
@@ -48,6 +49,11 @@ public class PlayerState
     {
         player.anim.SetBool(animBoolName, false); // когда мы выходим, то выключаем анимацию
 
+    }
+
+    public virtual void AnimationFinishTrigger() // метод который будет отвечать за завершения анимаций комбо
+    {
+        triggerCalled = true;
     }
 }
 

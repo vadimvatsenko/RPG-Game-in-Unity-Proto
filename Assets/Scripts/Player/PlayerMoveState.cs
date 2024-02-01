@@ -24,10 +24,9 @@ public class PlayerMoveState : PlayerGroundedState
         base.Update();
 
 
-        if (player.WhatIsWallDecected())
+        if (player.WhatIsWallDecected() && Mathf.Abs(xInput) > 0)
         {
             stateMachine.ChangeState(player.idleState); // при движением персонажа, когда он врезался в стену прекрати анимацию бега
-
         }
 
         player.SetVelocity(xInput * player.moveSpeed, player.rb.velocity.y); // предает движение в скрипт Player

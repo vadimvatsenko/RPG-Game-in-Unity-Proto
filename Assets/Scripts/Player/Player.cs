@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     public PlayerDashState dashState { get; private set; }
     public PlayerWallSlideState wallSlideState { get; private set; }
     public PlayerWallJumpState wallJumpState { get; private set; }
+    public PlayerPrimaryAttackState primaryAttackState { get; private set; }
     #endregion
 
     private void Awake()
@@ -61,6 +62,8 @@ public class Player : MonoBehaviour
         wallSlideState = new PlayerWallSlideState(this, stateMachine, "WallSlide");
 
         wallJumpState = new PlayerWallJumpState(this, stateMachine, "Jump");
+
+        primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
     }
 
     private void Start()
@@ -75,6 +78,8 @@ public class Player : MonoBehaviour
         stateMachine.currentState.Update();
         CheckForDashInput(); // вызываем метод запуск даша
     }
+
+    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger(); // метод который будет запускать AnimationFinishTrigger с любого состояния
 
     private void CheckForDashInput() // метод который будет отвечать за запуск даша
     {

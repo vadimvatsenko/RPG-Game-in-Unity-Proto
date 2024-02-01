@@ -21,6 +21,11 @@ public class PlayerGroundedState : PlayerState // новое состояние,
     {
         base.Update();
 
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            stateMachine.ChangeState(player.primaryAttackState);
+        }
+
         if (!player.whatIsGroundDetected()) // это решит проблему вызова бега в воздухе после даша
         {
             stateMachine.ChangeState(player.airState);
