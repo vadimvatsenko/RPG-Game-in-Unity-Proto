@@ -1,7 +1,12 @@
+using System.Collections;
 using UnityEngine;
 //5й скрипт
 public class Player : MonoBehaviour
 {
+    [Header("Attack details")]
+    public Vector2[] attackMovement; // это ждя корректировки атак, чтобы немного двигался персонаж вперед в момент атак
+
+    public bool isBusy { get; private set; } // переменная задержки
     [Header("Move info")]
     public float moveSpeed = 12f;
     public float jumpForce;
@@ -79,6 +84,13 @@ public class Player : MonoBehaviour
         CheckForDashInput(); // вызываем метод запуск даша
     }
 
+    public IEnumerable BusyFor(float _seconds) // Метод возвращает объект IEnumerable, который может быть использован для последовательного возврата значений.
+    {
+        isBusy = true;
+        yield return new WaitForSeconds(_seconds); // Эта строка использует оператор yield return, чтобы вернуть новый объект WaitForSeconds, который задерживает выполнение программы на указанное количество секунд. 
+        isBusy = false;
+    }
+
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger(); // метод который будет запускать AnimationFinishTrigger с любого состояния
 
     private void CheckForDashInput() // метод который будет отвечать за запуск даша
@@ -103,13 +115,16 @@ public class Player : MonoBehaviour
             stateMachine.ChangeState(dashState);
         }
     }
+    #region Velocity
+    public void ZeroVelocity() => rb.velocity = new Vector2(0, 0); // вынесем в отдельный метод rb.velocity = new Vector2(0, 0);
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
     {
         rb.velocity = new Vector2(_xVelocity, _yVelocity);
         FlipController(_xVelocity); // передаем положение игрока по х
     }
-
+    #endregion
+    #region Collission
     public bool whatIsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
     // булевой метод, который возвращает, столкнулись ли мы з землёй. от groundCheck.position к низу, на дистанцию groundCheckDistance, маска whatIsGround
     public bool WhatIsWallDecected() => Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
@@ -121,7 +136,8 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
 
     }
-
+    #endregion
+    #region Flip
     public void Flip() // метод переворота игрока
     {
         facingDir = facingDir * -1;
@@ -141,6 +157,7 @@ public class Player : MonoBehaviour
             Flip();
         }
     }
+    #endregion
 
 
 

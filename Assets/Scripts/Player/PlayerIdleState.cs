@@ -10,7 +10,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.Enter();
 
-        rb.velocity = new Vector2(0, 0); // устанавливаем значения по 0 0, это предотвратит баг с постоянной ходьбой, после прыжка со стены
+        player.ZeroVelocity(); // устанавливаем значения по 0 0, это предотвратит баг с постоянной ходьбой, после прыжка со стены
     }
 
     public override void Exit() // унаследован метод из PlayerState 
@@ -28,7 +28,7 @@ public class PlayerIdleState : PlayerGroundedState
         }
 
 
-        if (xInput != 0) // если координаты по xInput в PlayerState не равно 0, поменяй состояние на ходьбу
+        if (xInput != 0 && !player.isBusy) // если координаты по xInput в PlayerState не равно 0, поменяй состояние на ходьбу
         {
             stateMachine.ChangeState(player.moveState);
         }
