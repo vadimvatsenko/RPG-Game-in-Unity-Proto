@@ -39,7 +39,7 @@ public class PlayerState
     {
         stateTimer -= Time.deltaTime; // будем отнимать таймер
         yInput = Input.GetAxisRaw("Vertical");
-        xInput = Input.GetAxis("Horizontal");
+        xInput = Input.GetAxisRaw("Horizontal");
 
         player.anim.SetFloat("yVelocity", rb.velocity.y); // rb.velocity.y - текущее положение игрока по y
     }
