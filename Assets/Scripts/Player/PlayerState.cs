@@ -50,7 +50,7 @@ public class PlayerState
         player.anim.SetBool(animBoolName, false); // когда мы выходим, то выключаем анимацию
 
     }
-
+   
     public virtual void AnimationFinishTrigger() // метод который будет отвечать за завершения анимаций комбо
     {
         triggerCalled = true;

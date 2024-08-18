@@ -24,10 +24,11 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private float wallCheckDistance;
     [SerializeField] private LayerMask whatIsGround;
+  
 
     public int facingDir { get; private set; } = 1; // направление игрока по умолчанию 1, { get; private set; } - означает, что мы можем получать данные из другого скрипта, но не изменять
     private bool facingRight = true;
-
+    int hashNname = Animator.StringToHash("Idle");
     internal int xInput;
 
 
@@ -52,7 +53,8 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        stateMachine = new PlayerStateMachine(); // экземпляр класса PlayerStateMachine
+     
+      stateMachine = new PlayerStateMachine(); // экземпляр класса PlayerStateMachine
 
         idleState = new PlayerIdleState(this, stateMachine, "Idle"); // экземпляр класса PlayerIdleState в нём есть конструктор, который принимает игрока, состояние и анимацию
 

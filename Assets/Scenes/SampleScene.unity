@@ -1104,6 +1104,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21592e279d7cd37458acdb78f19345ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMovement:
+  - {x: 3, y: 1.5}
+  - {x: 1, y: 2.5}
+  - {x: 4, y: 1.5}
   moveSpeed: 8
   jumpForce: 14
   dashCooldown: 1
